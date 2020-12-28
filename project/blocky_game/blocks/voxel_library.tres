@@ -1,7 +1,6 @@
-[gd_resource type="VoxelLibrary" load_steps=54 format=2]
+[gd_resource type="VoxelLibrary" load_steps=53 format=2]
 
 [ext_resource path="res://blocky_game/blocks/grass/grass.obj" type="ArrayMesh" id=1]
-[ext_resource path="res://blocky_game/blocks/dirt/dirt.obj" type="ArrayMesh" id=2]
 [ext_resource path="res://blocky_game/blocks/log/log_y.obj" type="ArrayMesh" id=3]
 [ext_resource path="res://blocky_game/blocks/log/log_x.obj" type="ArrayMesh" id=4]
 [ext_resource path="res://blocky_game/blocks/log/log_z.obj" type="ArrayMesh" id=5]
@@ -32,9 +31,15 @@ voxel_name = "air"
 
 [sub_resource type="Voxel" id=2]
 voxel_name = "dirt"
-geometry_type = 2
-custom_mesh = ExtResource( 2 )
+geometry_type = 1
 collision_aabbs = [ AABB( 0, 0, 0, 1, 1, 1 ) ]
+cube_geometry/padding_y = null
+cube_tiles/left = Vector2( 0, 1 )
+cube_tiles/right = Vector2( 0, 1 )
+cube_tiles/bottom = Vector2( 1, 0 )
+cube_tiles/top = Vector2( 0, 0 )
+cube_tiles/back = Vector2( 0, 1 )
+cube_tiles/front = Vector2( 0, 1 )
 
 [sub_resource type="Voxel" id=3]
 voxel_name = "stairs_px"

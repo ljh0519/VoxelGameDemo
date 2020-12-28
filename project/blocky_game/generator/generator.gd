@@ -17,6 +17,8 @@ const TALL_GRASS = 8
 const DEAD_SHRUB = 26
 #const STONE = 8
 
+#VoxelStream
+# CHANNEL_TYPE是什么神起名，看到这个名字我完全联想不到他是干什么的
 const _CHANNEL = VoxelBuffer.CHANNEL_TYPE
 
 const _moore_dirs = [
@@ -30,13 +32,17 @@ const _moore_dirs = [
 	Vector3(1, 0, 1)
 ]
 
-
+# 用这个数组保存树的各种形态。
+# 使得每次生成树时不需要重新计算
 var _tree_structures := []
 
+# 高度图的最高点和最低点，用于判断树是否能够放下
 var _heightmap_min_y := int(HeightmapCurve.min_value)
 var _heightmap_max_y := int(HeightmapCurve.max_value)
 var _heightmap_range := 0
+# 使用高度图噪声通过x，z求取高度，通过高度判断该树是否能够放下
 var _heightmap_noise := OpenSimplexNoise.new()
+# 这是对树是否能放下判断的一种优化方法
 var _trees_min_y := 0
 var _trees_max_y := 0
 
@@ -46,10 +52,12 @@ func _init():
 	var tree_generator = TreeGenerator.new()
 	tree_generator.log_type = LOG
 	tree_generator.leaves_type = LEAVES
+	# 生成16颗不同形态的树放入数组中
 	for i in 16:
 		var s = tree_generator.generate()
 		_tree_structures.append(s)
 
+	# 算出树最高能到达多少，最低能到多少
 	var tallest_tree_height = 0
 	for structure in _tree_structures:
 		var h = int(structure.voxels.get_size().y)
@@ -58,6 +66,7 @@ func _init():
 	_trees_min_y = _heightmap_min_y
 	_trees_max_y = _heightmap_max_y + tallest_tree_height
 
+	# 这里的初始化缺少种子信息
 	_heightmap_noise.period = 128
 	_heightmap_noise.octaves = 4
 
@@ -72,6 +81,7 @@ func _generate_block(buffer: VoxelBuffer, origin_in_voxels: Vector3, lod: int):
 	var oy := int(origin_in_voxels.y)
 	# TODO This hardcodes a cubic block size of 16, find a non-ugly way...
 	# Dividing is a false friend because of negative values
+	# 通过给定的坐标，求出该坐标所在的chunk的位置，该生成器是通过chunk将地图划分成块，每个chunk大小为16*16*16
 	var chunk_pos := Vector3(
 		int(origin_in_voxels.x) >> 4,
 		int(origin_in_voxels.y) >> 4,
@@ -80,14 +90,15 @@ func _generate_block(buffer: VoxelBuffer, origin_in_voxels: Vector3, lod: int):
 	_heightmap_range = _heightmap_max_y - _heightmap_min_y
 
 	# Ground
-
+	# 如果所在区块高于高度图最高点，直接生成空气填充
 	if origin_in_voxels.y > _heightmap_max_y:
 		buffer.fill(AIR, _CHANNEL)
-
+	# 若所在区块低于高度图最低点，直接使用泥土方块填充，这里可以另起一个类，做地下洞穴，和其他方块资源
 	elif origin_in_voxels.y + block_size < _heightmap_min_y:
 		buffer.fill(DIRT, _CHANNEL)
 
 	else:
+		# 创建随机生成器
 		var rng := RandomNumberGenerator.new()
 		rng.seed = _get_chunk_seed_2d(chunk_pos)
 		
@@ -98,6 +109,7 @@ func _generate_block(buffer: VoxelBuffer, origin_in_voxels: Vector3, lod: int):
 			gx = int(origin_in_voxels.x)
 
 			for x in block_size:
+				# 从高度图获取x，z点的高度
 				var height := _get_height_at(gx, gz)
 				var relative_height := height - oy
 				
@@ -154,6 +166,7 @@ func _generate_block(buffer: VoxelBuffer, origin_in_voxels: Vector3, lod: int):
 			var aabb := AABB(lower_corner_pos, structure.voxels.get_size() + Vector3(1, 1, 1))
 
 			if aabb.intersects(block_aabb):
+				# paste 粘贴，将structure.voxels buffer 粘贴至 lower_corner_pos 位置处，voxels buffer中空白字段，用掩码 AIR 填充
 				voxel_tool.paste(lower_corner_pos, structure.voxels, AIR)
 
 	buffer.optimize()
@@ -180,7 +193,7 @@ func _get_tree_instances_in_chunk(
 #static func get_chunk_seed(cpos: Vector3) -> int:
 #	return cpos.x ^ (13 * int(cpos.y)) ^ (31 * int(cpos.z))
 
-
+# 这里因为没有传入种子，所以使用自己生成的种子
 static func _get_chunk_seed_2d(cpos: Vector3) -> int:
 	return int(cpos.x) ^ (31 * int(cpos.z))
 

@@ -1,0 +1,24 @@
+材质包在VoxelTerrain类中Meterial设置
+
+VoxelLibrary类：（用来描述物体形状信息，这是一个库，可以包含多个物体形状信息）
+	Atlas Size表示将材质包中的图片等分成多少份
+	Voxel Count表示有多少个方块
+	Voxels 具体描述每个方块的信息（左边的编号即该Voxel在Voxels中的index）
+		Voxel Name 描述方块的名称，后续可按名称查找该Voxel
+		Color 目前没有发现用处
+		Transparency Index 透明度，目前没搞明白
+		Random Tickable 目前没搞明白
+		MaterialId	指定你在VoxelTerrain类中Meterial类中设置的材质序号，目前你可能在使用透明和不透明材质时需要用到这个参数）
+		Geometry Type 表示物体的形状，目前有（None，Cube，Custom）（无形状，立方体，自定义：自定义可导入自己制作的复杂形状）
+			若选择为Cube，刷新该界面，会出现两个新的选项，Cube Geometry，Cube Tiles
+				Cube Geometry 目前没搞明白
+				Cube Tiles 表示物体的贴图，相对于材质图片的偏移量，Atlas Size 将材质等分后，x或者y设置成1，就代表贴图的位置向x方向或者y方向偏移一等份
+		Collision Aabbs 表示物体的形状和大小（都是碰撞相关的，如果你想描述的物体没有碰撞，则默认0就可以，xyz表示偏移，whd表示宽高长）
+		Collision Mask 表示该物体的碰撞层数，具体还没有摸清
+		
+
+
+VoxelTerrain类:（用来生成地图）
+	需要设置Meterial，即材质包，材质包左边的数字就是该材质在Meterial中的index，这在VoxelLibrary中可以用到
+	需要设置Stream，就是生成地图的流，可以是图片，也可以是脚本（自定义，或者使用他们的VoxelGeneratorNoise2D类）
+	需要设置Mesher，即VoxelLibrary，包括使用VoxelTerrain类时生成地图的基本方块。

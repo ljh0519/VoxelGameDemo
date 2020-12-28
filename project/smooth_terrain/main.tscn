@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://smooth_terrain/main.gd" type="Script" id=1]
 [ext_resource path="res://smooth_terrain/transvoxel_terrain_material.tres" type="Material" id=2]
@@ -24,6 +24,8 @@ fog_depth_end = 1600.0
 fog_height_min = -100.0
 fog_height_max = -50.0
 fog_height_curve = 0.965937
+
+[sub_resource type="VoxelMesherTransvoxel" id=3]
 
 [node name="Node" type="Node"]
 script = ExtResource( 1 )
@@ -55,6 +57,7 @@ script = ExtResource( 6 )
 
 [node name="VoxelTerrain" type="VoxelLodTerrain" parent="."]
 stream = ExtResource( 7 )
+mesher = SubResource( 3 )
 view_distance = 2048
 lod_count = 6
 material = ExtResource( 2 )

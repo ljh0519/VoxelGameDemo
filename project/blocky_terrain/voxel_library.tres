@@ -1,22 +1,24 @@
-[gd_resource type="VoxelLibrary" load_steps=6 format=2]
-
-[ext_resource path="res://blocky_terrain/custom_mesh.obj" type="ArrayMesh" id=1]
+[gd_resource type="VoxelLibrary" load_steps=9 format=2]
 
 [sub_resource type="Voxel" id=1]
+voxel_name = "air"
 transparent = true
+transparency_index = 1
 
 [sub_resource type="Voxel" id=2]
+voxel_name = "grass"
 geometry_type = 1
 collision_aabbs = [ AABB( 0, 0, 0, 1, 1, 1 ) ]
 cube_geometry/padding_y = null
-cube_tiles/left = Vector2( 0, 0 )
-cube_tiles/right = Vector2( 0, 0 )
-cube_tiles/bottom = Vector2( 0, 0 )
+cube_tiles/left = Vector2( 0, 1 )
+cube_tiles/right = Vector2( 0, 1 )
+cube_tiles/bottom = Vector2( 1, 0 )
 cube_tiles/top = Vector2( 0, 0 )
-cube_tiles/back = Vector2( 0, 0 )
-cube_tiles/front = Vector2( 0, 0 )
+cube_tiles/back = Vector2( 0, 1 )
+cube_tiles/front = Vector2( 0, 1 )
 
 [sub_resource type="Voxel" id=3]
+voxel_name = "dirt"
 geometry_type = 1
 collision_aabbs = [ AABB( 0, 0, 0, 1, 1, 1 ) ]
 cube_geometry/padding_y = null
@@ -28,14 +30,79 @@ cube_tiles/back = Vector2( 1, 0 )
 cube_tiles/front = Vector2( 1, 0 )
 
 [sub_resource type="Voxel" id=4]
-voxel_name = "MeshTest"
-geometry_type = 2
-custom_mesh = ExtResource( 1 )
-collision_aabbs = [ AABB( 0, 0, 0, 1, 0.8, 1 ) ]
+voxel_name = "oak_log_x"
+geometry_type = 1
+collision_aabbs = [ AABB( 0, 0, 0, 1, 1, 1 ) ]
+cube_geometry/padding_y = null
+cube_tiles/left = Vector2( 3, 0 )
+cube_tiles/right = Vector2( 3, 0 )
+cube_tiles/bottom = Vector2( 2, 0 )
+cube_tiles/top = Vector2( 2, 0 )
+cube_tiles/back = Vector2( 2, 0 )
+cube_tiles/front = Vector2( 2, 0 )
+
+[sub_resource type="Voxel" id=5]
+voxel_name = "oak_log_y"
+geometry_type = 1
+collision_aabbs = [ AABB( 0, 0, 0, 1, 1, 1 ) ]
+cube_geometry/padding_y = null
+cube_tiles/left = Vector2( 2, 0 )
+cube_tiles/right = Vector2( 2, 0 )
+cube_tiles/bottom = Vector2( 2, 0 )
+cube_tiles/top = Vector2( 2, 0 )
+cube_tiles/back = Vector2( 3, 0 )
+cube_tiles/front = Vector2( 3, 0 )
+
+[sub_resource type="Voxel" id=6]
+voxel_name = "oak_log_z"
+geometry_type = 1
+collision_aabbs = [ AABB( 0, 0, 0, 1, 1, 1 ) ]
+cube_geometry/padding_y = null
+cube_tiles/left = Vector2( 2, 0 )
+cube_tiles/right = Vector2( 2, 0 )
+cube_tiles/bottom = Vector2( 3, 0 )
+cube_tiles/top = Vector2( 3, 0 )
+cube_tiles/back = Vector2( 2, 0 )
+cube_tiles/front = Vector2( 2, 0 )
+
+[sub_resource type="Voxel" id=7]
+voxel_name = "oak_leaves"
+transparent = true
+transparency_index = 1
+material_id = 1
+geometry_type = 1
+collision_aabbs = [ AABB( 0, 0, 0, 0, 0, 0 ) ]
+collision_mask = 0
+cube_geometry/padding_y = null
+cube_tiles/left = Vector2( 0, 2 )
+cube_tiles/right = Vector2( 0, 2 )
+cube_tiles/bottom = Vector2( 0, 2 )
+cube_tiles/top = Vector2( 0, 2 )
+cube_tiles/back = Vector2( 0, 2 )
+cube_tiles/front = Vector2( 0, 2 )
+
+[sub_resource type="Voxel" id=8]
+voxel_name = "water"
+transparent = true
+transparency_index = 1
+material_id = 2
+geometry_type = 1
+collision_aabbs = [ AABB( 0, 0, 0, 1, 1, 1 ) ]
+collision_mask = 0
+cube_geometry/padding_y = null
+cube_tiles/left = Vector2( 2, 1 )
+cube_tiles/right = Vector2( 2, 1 )
+cube_tiles/bottom = Vector2( 2, 1 )
+cube_tiles/top = Vector2( 2, 1 )
+cube_tiles/back = Vector2( 2, 1 )
+cube_tiles/front = Vector2( 2, 1 )
 
 [resource]
-atlas_size = 4
 voxels/0 = SubResource( 1 )
 voxels/1 = SubResource( 2 )
 voxels/2 = SubResource( 3 )
 voxels/3 = SubResource( 4 )
+voxels/4 = SubResource( 5 )
+voxels/5 = SubResource( 6 )
+voxels/6 = SubResource( 7 )
+voxels/7 = SubResource( 8 )

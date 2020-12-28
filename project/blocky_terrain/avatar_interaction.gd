@@ -15,8 +15,16 @@ var _cursor = null
 var _action_place = false
 var _action_remove = false
 
-var _inventory = [1, 2, 3]
-var _inventory_index = 0
+const _inventory : Dictionary = {
+	0 : "air", 
+	1 : "grass", 
+	2 : "dirt", 
+	3 : "oak_log_x", 
+	4 : "oak_log_y", 
+	5 : "oak_log_z", 
+	6 : "oak_leaves"
+}
+var _inventory_index = 1
 
 
 func _ready():
@@ -49,6 +57,7 @@ func _physics_process(delta):
 	if _terrain == null:
 		return
 	
+	DDD.set_text("Now select lump : ", _inventory[_inventory_index])
 	var hit = get_pointed_voxel()
 	if hit != null:
 		_cursor.show()
@@ -71,7 +80,7 @@ func _physics_process(delta):
 			if has_cube == false:
 				pos = hit.position
 			if can_place_voxel_at(pos):
-				do_sphere(pos, 4, _inventory[_inventory_index])
+				do_sphere(pos, 4, _inventory_index)
 				print("Place voxel at ", pos)
 			else:
 				print("Can't place here!")
@@ -98,14 +107,22 @@ func _unhandled_input(event):
 					select_inventory(1)
 				KEY_3:
 					select_inventory(2)
+				KEY_4:
+					select_inventory(3)
+				KEY_5:
+					select_inventory(4)
+				KEY_6:
+					select_inventory(5)
+				KEY_7:
+					select_inventory(6)
 
 
 func select_inventory(i):
 	if i < 0 or i >= len(_inventory):
 		return
 	_inventory_index = i
-	var vi = _inventory[i]
-	print("Inventory select ", _terrain.voxel_library.get_voxel(vi).voxel_name, " (", vi, ")")
+#	var vi = _inventory[i]
+#	print("Inventory select ", _terrain.voxel_library.get_voxel(vi).voxel_name, " (", vi, ")")
 
 
 func can_place_voxel_at(pos):

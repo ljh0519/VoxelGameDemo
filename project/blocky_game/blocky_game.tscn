@@ -1,6 +1,5 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=20 format=2]
 
-[ext_resource path="res://blocky_game/blocks/voxel_library.tres" type="VoxelLibrary" id=1]
 [ext_resource path="res://blocky_game/blocks/terrain_material.tres" type="Material" id=2]
 [ext_resource path="res://blocky_game/blocks/terrain_material_transparent.tres" type="Material" id=3]
 [ext_resource path="res://blocky_game/generator/world_generator.tres" type="VoxelGeneratorScript" id=4]
@@ -46,6 +45,30 @@ fallback_stream = ExtResource( 4 )
 save_fallback_output = false
 directory = "res://blocky_game/save"
 
+[sub_resource type="Voxel" id=4]
+voxel_name = "air"
+transparent = true
+transparency_index = 1
+
+[sub_resource type="Voxel" id=5]
+voxel_name = "solid"
+geometry_type = 1
+collision_aabbs = [ AABB( 0, 0, 0, 1, 1, 1 ) ]
+cube_geometry/padding_y = null
+cube_tiles/left = Vector2( 0, 0 )
+cube_tiles/right = Vector2( 0, 0 )
+cube_tiles/bottom = Vector2( 0, 0 )
+cube_tiles/top = Vector2( 0, 0 )
+cube_tiles/back = Vector2( 0, 0 )
+cube_tiles/front = Vector2( 0, 0 )
+
+[sub_resource type="VoxelLibrary" id=6]
+voxels/0 = SubResource( 4 )
+voxels/1 = SubResource( 5 )
+
+[sub_resource type="VoxelMesherBlocky" id=7]
+library = SubResource( 6 )
+
 [node name="Main" type="Node"]
 script = ExtResource( 5 )
 
@@ -60,7 +83,7 @@ environment = SubResource( 2 )
 
 [node name="VoxelTerrain" type="VoxelTerrain" parent="."]
 stream = SubResource( 3 )
-voxel_library = ExtResource( 1 )
+mesher = SubResource( 7 )
 generate_collisions = false
 run_stream_in_editor = false
 material/0 = ExtResource( 2 )
