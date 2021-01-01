@@ -1,27 +1,20 @@
-
-const Structure = preload("./structure01.gd")
-
-
-var trunk_len_min : int = 4
-var trunk_len_max : int = 12
-var log_x_id : int 
-var log_y_id : int 
-var log_z_id : int 
-var leaves_id : int
-var channel : int = VoxelBuffer.CHANNEL_TYPE
+extends TreeGenerator
 
 
-func generate() -> Structure:
+
+func generate() -> TreeBuffer:
 	var voxels := {}
 	# Let's make crappy trees
 	
 	# Trunk
+	# 随机出树干的高度
 	var trunk_len := int(rand_range(trunk_len_min, trunk_len_max))
 	for y in trunk_len:
 		voxels[Vector3(0, y, 0)] = log_y_id
 
 	# Branches
-	var branches_start := int(rand_range(trunk_len / 3, trunk_len / 2))
+	# 随机出分支出现的树干节数
+	var branches_start := int(rand_range(trunk_len / 3.0, trunk_len / 2.0))
 	for y in range(branches_start, trunk_len):
 		var t := float(y - branches_start) / float(trunk_len)
 		var branch_chance := 1.0 - pow(t - 0.5, 2)
@@ -57,21 +50,25 @@ func generate() -> Structure:
 			if not voxels.has(npos):
 				voxels[npos] = leaves_id
 
-	# Make structure
+	# Make TreeBuffer
 	var aabb := AABB()
 	for pos in voxels:
 		aabb = aabb.expand(pos)
 
-	var structure := Structure.new()
-	structure.offset = -aabb.position
+	var tree := TreeBuffer.new()
+	tree.offset = -aabb.position
 
-	var buffer := structure.voxels
+	var buffer := tree.voxels
 	buffer.create(int(aabb.size.x) + 1, int(aabb.size.y) + 1, int(aabb.size.z) + 1)
 
 	for pos in voxels:
-		var rpos = pos + structure.offset
+		var rpos = pos + tree.offset
 		var v = voxels[pos]
 		buffer.set_voxel(v, rpos.x, rpos.y, rpos.z, channel)
 
-	return structure
+	return tree
 
+
+func grow() -> void:
+	pass
+#	return TreeBuffer.new()

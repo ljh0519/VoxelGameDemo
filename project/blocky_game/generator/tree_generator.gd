@@ -19,7 +19,7 @@ func generate() -> Structure:
 		voxels[Vector3(0, y, 0)] = log_type
 
 	# Branches
-	var branches_start := int(rand_range(trunk_len / 3, trunk_len / 2))
+	var branches_start := int(rand_range(trunk_len / 3.0, trunk_len / 2.0))
 	for y in range(branches_start, trunk_len):
 		var t := float(y - branches_start) / float(trunk_len)
 		var branch_chance := 1.0 - pow(t - 0.5, 2)

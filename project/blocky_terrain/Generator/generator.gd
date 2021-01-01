@@ -1,12 +1,11 @@
 #tool
 extends VoxelGeneratorScript
 
-const Structure = preload("./structure01.gd")
-const TreeGenerator = preload("./tree_generator01.gd")
+const OAKTreeGenerator = preload("./oak_tree_generator.gd")
 const BlockInfo = preload("./block_item_info.gd")
-const HeightmapCurve = preload("./heightmap_curve01.tres")
+const HeightmapCurve = preload("./heightmap_curve.tres")
 #Curve
-const Library : VoxelLibrary = preload("./voxel_library.tres")
+const Library : VoxelLibrary = preload("../assets/voxel_library.tres")
 
 # TODO Don't hardcode, get by name from library somehow
 
@@ -50,23 +49,24 @@ func _init():
 	oak_log_y_id = Library.get_voxel_index_from_name(BlockInfo.block_name_dirt["oak_log_y"])
 	oak_leaves_id = Library.get_voxel_index_from_name(BlockInfo.block_name_dirt["oak_leaves"])
 	water_id = Library.get_voxel_index_from_name(BlockInfo.block_name_dirt["water"])
+	oak_leaves_id = Library.get_voxel_index_from_name(BlockInfo.block_name_dirt["oak_leaves"])
 	# TODO Even this must be based on a seed, but I'm lazy
-#	var tree_generator = TreeGenerator.new()
-#	tree_generator.log_type = LOG
-#	tree_generator.leaves_type = LEAVES
-#	# 生成16颗不同形态的树放入数组中
-#	for i in 16:
-#		var s = tree_generator.generate()
-#		_tree_structures.append(s)
-#
-#	# 算出树最高能到达多少，最低能到多少
-#	var tallest_tree_height = 0
-#	for structure in _tree_structures:
-#		var h = int(structure.voxels.get_size().y)
-#		if tallest_tree_height < h:
-#			tallest_tree_height = h
-#	_trees_min_y = _heightmap_min_y
-#	_trees_max_y = _heightmap_max_y + tallest_tree_height
+	var tree_generator = OAKTreeGenerator.new()
+	tree_generator.log_y_id = oak_log_y_id
+	tree_generator.leaves_id = oak_leaves_id
+	# 生成16颗不同形态的树放入数组中
+	for i in 16:
+		var s : TreeGenerator.TreeBuffer = tree_generator.generate()
+		_tree_structures.append(s)
+
+	# 算出树最高能到达多少，最低能到多少
+	var tallest_tree_height = 0
+	for structure in _tree_structures:
+		var h = int(structure.voxels.get_size().y)
+		if tallest_tree_height < h:
+			tallest_tree_height = h
+	_trees_min_y = _heightmap_min_y
+	_trees_max_y = _heightmap_max_y + tallest_tree_height
 
 	# 这里的初始化缺少种子信息
 	_heightmap_noise.period = 128
@@ -151,28 +151,28 @@ func _generate_block(buffer: VoxelBuffer, origin_in_voxels: Vector3, lod: int):
 
 	# Trees
 
-#	if origin_in_voxels.y <= _trees_max_y and origin_in_voxels.y + block_size >= _trees_min_y:
-#		var voxel_tool := buffer.get_voxel_tool()
-#		var structure_instances := []
-#
-#		_get_tree_instances_in_chunk(chunk_pos, origin_in_voxels, block_size, structure_instances)
-#
-#		# Relative to current block
-#		var block_aabb := AABB(Vector3(), buffer.get_size() + Vector3(1, 1, 1))
-#
-#		for dir in _moore_dirs:
-#			var ncpos : Vector3 = (chunk_pos + dir).round()
-#			_get_tree_instances_in_chunk(ncpos, origin_in_voxels, block_size, structure_instances)
-#
-#		for structure_instance in structure_instances:
-#			var pos : Vector3 = structure_instance[0]
-#			var structure : Structure = structure_instance[1]
-#			var lower_corner_pos := pos - structure.offset
-#			var aabb := AABB(lower_corner_pos, structure.voxels.get_size() + Vector3(1, 1, 1))
-#
-#			if aabb.intersects(block_aabb):
-#				# paste 粘贴，将structure.voxels buffer 粘贴至 lower_corner_pos 位置处，voxels buffer中空白字段，用掩码 air_id 填充
-#				voxel_tool.paste(lower_corner_pos, structure.voxels, air_id)
+	if origin_in_voxels.y <= _trees_max_y and origin_in_voxels.y + block_size >= _trees_min_y:
+		var voxel_tool := buffer.get_voxel_tool()
+		var structure_instances := []
+
+		_get_tree_instances_in_chunk(chunk_pos, origin_in_voxels, block_size, structure_instances)
+
+		# Relative to current block
+		var block_aabb := AABB(Vector3(), buffer.get_size() + Vector3(1, 1, 1))
+
+		for dir in _moore_dirs:
+			var ncpos : Vector3 = (chunk_pos + dir).round()
+			_get_tree_instances_in_chunk(ncpos, origin_in_voxels, block_size, structure_instances)
+
+		for structure_instance in structure_instances:
+			var pos : Vector3 = structure_instance[0]
+			var tree : TreeGenerator.TreeBuffer = structure_instance[1]
+			var lower_corner_pos := pos - tree.offset
+			var aabb := AABB(lower_corner_pos, tree.voxels.get_size() + Vector3(1, 1, 1))
+#			Dictionary
+			if aabb.intersects(block_aabb):
+				# paste 粘贴，将structure.voxels buffer 粘贴至 lower_corner_pos 位置处，voxels buffer中空白字段，用掩码 air_id 填充
+				voxel_tool.paste(lower_corner_pos, tree.voxels, air_id)
 
 	buffer.optimize()
 
@@ -183,7 +183,7 @@ func _get_tree_instances_in_chunk(
 	var rng := RandomNumberGenerator.new()
 	rng.seed = _get_chunk_seed_2d(cpos)
 
-	for i in 4:
+	for i in 2:
 		var pos := Vector3(rng.randi() % chunk_size, 0, rng.randi() % chunk_size)
 		pos += cpos * chunk_size
 		pos.y = _get_height_at(pos.x, pos.z)
@@ -191,8 +191,8 @@ func _get_tree_instances_in_chunk(
 		if pos.y > 0:
 			pos -= offset
 			var si := rng.randi() % len(_tree_structures)
-#			var structure : Structure = _tree_structures[si]
-#			tree_instances.append([pos.round(), structure])
+			var tree : TreeGenerator.TreeBuffer = _tree_structures[si]
+			tree_instances.push_back([pos.round(), tree])
 
 
 #static func get_chunk_seed(cpos: Vector3) -> int:
@@ -203,6 +203,6 @@ static func _get_chunk_seed_2d(cpos: Vector3) -> int:
 	return int(cpos.x) ^ (31 * int(cpos.z))
 
 
-func _get_height_at(x: int, z: int) -> int:
+func _get_height_at(x: float, z: float) -> int:
 	var t = 0.5 + 0.5 * _heightmap_noise.get_noise_2d(x, z)
 	return int(HeightmapCurve.interpolate_baked(t))

@@ -42,7 +42,7 @@ cube_tiles/back = Vector2( 2, 0 )
 cube_tiles/front = Vector2( 2, 0 )
 
 [sub_resource type="Voxel" id=5]
-voxel_name = "oak_log_y"
+voxel_name = "oak_log_z"
 geometry_type = 1
 collision_aabbs = [ AABB( 0, 0, 0, 1, 1, 1 ) ]
 cube_geometry/padding_y = null
@@ -54,7 +54,7 @@ cube_tiles/back = Vector2( 3, 0 )
 cube_tiles/front = Vector2( 3, 0 )
 
 [sub_resource type="Voxel" id=6]
-voxel_name = "oak_log_z"
+voxel_name = "oak_log_y"
 geometry_type = 1
 collision_aabbs = [ AABB( 0, 0, 0, 1, 1, 1 ) ]
 cube_geometry/padding_y = null
@@ -71,8 +71,7 @@ transparent = true
 transparency_index = 1
 material_id = 1
 geometry_type = 1
-collision_aabbs = [ AABB( 0, 0, 0, 0, 0, 0 ) ]
-collision_mask = 0
+collision_aabbs = [ AABB( 0, 0, 0, 1, 1, 1 ) ]
 cube_geometry/padding_y = null
 cube_tiles/left = Vector2( 0, 2 )
 cube_tiles/right = Vector2( 0, 2 )

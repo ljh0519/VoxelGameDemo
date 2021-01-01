@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Reference",
+"class": "TreeGenerator",
+"language": "GDScript",
+"path": "res://blocky_terrain/Generator/tree_generator.gd"
+} ]
+_global_script_class_icons={
+"TreeGenerator": ""
+}
+
 [application]
 
 config/name="New Game Project"

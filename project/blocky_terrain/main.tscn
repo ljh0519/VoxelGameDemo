@@ -1,12 +1,12 @@
 [gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://blocky_terrain/voxel_library.tres" type="VoxelLibrary" id=1]
-[ext_resource path="res://blocky_terrain/terrain_material.tres" type="Material" id=2]
-[ext_resource path="res://blocky_terrain/terrain_material_transparent.tres" type="Material" id=3]
-[ext_resource path="res://blocky_terrain/world_generator01.tres" type="VoxelGeneratorScript" id=4]
+[ext_resource path="res://blocky_terrain/assets/voxel_library.tres" type="VoxelLibrary" id=1]
+[ext_resource path="res://blocky_terrain/assets/terrain_material.tres" type="Material" id=2]
+[ext_resource path="res://blocky_terrain/assets/terrain_material_transparent.tres" type="Material" id=3]
+[ext_resource path="res://blocky_terrain/Generator/world_generator.tres" type="VoxelGeneratorScript" id=4]
 [ext_resource path="res://blocky_terrain/main.gd" type="Script" id=5]
-[ext_resource path="res://blocky_terrain/character_avatar.tscn" type="PackedScene" id=6]
-[ext_resource path="res://blocky_terrain/terrain_material_foliage.tres" type="Material" id=7]
+[ext_resource path="res://blocky_terrain/player/character_avatar.tscn" type="PackedScene" id=6]
+[ext_resource path="res://blocky_terrain/assets/terrain_material_foliage.tres" type="Material" id=7]
 [ext_resource path="res://blocky_terrain/debug_info.gd" type="Script" id=8]
 
 [sub_resource type="ProceduralSky" id=1]
